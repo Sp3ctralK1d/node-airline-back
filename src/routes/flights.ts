@@ -20,8 +20,12 @@ export default (app: Application) => {
             seats
         } = req.body
 
-        // let emptySeats = []
-        // for(let seat of seats.length) emptySeats.push(0)
+        let emptySeats = []
+        let i = 0
+        while(i < seats){
+            emptySeats.push(0)
+            i += 1
+        }
         try {
             let flight = await Flight.create({
                 company, 
@@ -32,7 +36,7 @@ export default (app: Application) => {
                 arrivingTime,
                 arrivingDate,
                 timeSpent,
-                // seats: emptySeats
+                seats: emptySeats
             })  
             return res.status(200).json(flight).end()
         } catch (err) {
@@ -51,9 +55,14 @@ export default (app: Application) => {
 
     app.put('/flights/', async (req: Request, res: Response) => {
         try {
-            const flightDTO = req.body.product
-            const flight = Flight.findByIdAndUpdate({ _id: flightDTO._id }, flightDTO)
-            return res.json(flight).status(200)
+            const flightDTO = req.body
+            console.log(flightDTO)
+            const flight = Flight.findByIdAndUpdate({ _id: flightDTO.id }, req.body, function(err, post) {
+                if (err) return res.json(err)
+                return res.json(post) 
+            })
+            
+            // return res.json(flight).status(200)
         } catch (err) {
             return res.json(err).status(500)
         }
@@ -62,8 +71,11 @@ export default (app: Application) => {
     app.delete('/flights/:id/', async (req: Request, res: Response) => {
         try {
             const _id  = req.params.id
-            const flight = Flight.findByIdAndRemove({ _id })
-            return res.json(flight).status(200)
+            const flight = Flight.findByIdAndDelete(req.params.id, req.body, function(err, post) {
+                if (err) return res.json(err);
+                res.json(post);
+               });
+            // return res.json(flight).status(200)
         } catch (err) {
             return res.json(err).status(500)
         }

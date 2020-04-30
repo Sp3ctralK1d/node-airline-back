@@ -8,7 +8,7 @@ interface IFlight {
     startTime: string,
     arrivingTime: string,
     arrivingDate: Date,
-    timeSpent: Date,
+    timeSpent: string,
     seats: [Number]
 }
 
@@ -20,7 +20,7 @@ const FlightSchema = new mongoose.Schema({
     startTime: String,
     arrivingTime: String,
     arrivingDate: Date,
-    timeSpent: Date,
+    timeSpent: String,
     seats: [Number]
 })
 
